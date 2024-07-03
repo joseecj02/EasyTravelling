@@ -1,0 +1,75 @@
+* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('img/fondo.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.contenedor-principal {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 3.5rem;
+}
+
+.titulo {
+    margin-bottom: 1.5rem;
+    background-color: #f0f0f0;
+    padding: 1rem;
+    border-radius: 0.8rem;
+}
+
+.contenedor-add-comentarios {
+    background-color: #f0f0f0;
+    padding: 1.5rem;
+    border-radius: 0.8rem;
+    box-shadow: 1 0 1rem rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.comentario {
+    text-align: left;
+}
+
+.posicion-boton-volver button {
+    background-color: #3f0086;
+    color: white;
+    cursor: pointer;
+    border: none;
+    padding: 1rem;
+    border-radius: 0.4rem;
+}
+
+.posicion-boton-volver button:hover {
+    background-color: #220049;
+}
+
+.fila-tres {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.fila-uno {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.nombre-estrellas {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #3f0086;
+}

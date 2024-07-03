@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar perfil</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='modify_info_acc.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            background-image: url('/static/img/fondo.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modify-info-acc-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+
+        .alerta-modificacion {
+            background-color: #cff8b8;
+            color: #008000;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #008000;
+            border-radius: 8px;
+        }
+
+        .alerta-error{
+            background-color: #ffcccc;
+            color: #cc0000;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #cc0000;
+            border-radius: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: #3f0086;
+            color: white;
+        }
+
+        .btn:hover {
+            background-color: #220049;
+            color:#fff;
+        }
+
+        .boton-volver, .boton-eliminar-acc {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .boton-eliminar-acc {
+            background-color: #fd1515d8;
+            border-color: #fd1515d8;
+        }
+
+        .boton-eliminar-acc:hover {
+            background-color: #ffa7a7;
+        }
+
+        a {
+            color: #3f0086;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none !important;
+        }
+
+        .botones-contenedor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="modify-info-acc-box">
+                    <h1 class="text-center">Información de la cuenta</h1>
+                    {% if mensaje4 %}
+                        <div class="alerta-modificacion" role="alert">
+                            {{ mensaje4 }}
+                        </div>
+                    {% endif %}
+                    {% if mensaje1 %}
+                        <div class="alerta-error" role="alert">
+                            {{ mensaje1 }}
+                        </div>
+                    {% endif %}
+                    {% if mensaje3 %}
+                        <div class="alerta-error" role="alert">
+                            {{ mensaje3 }}
+                        </div>
+                    {% endif %}
+                    {% if mensaje2 %}
+                        <div class="alerta-error" role="alert">
+                            {{ mensaje2 }}
+                        </div>
+                    {% endif %}
+                    <form method="post" action="{{ url_for('edit') }}">
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" placeholder="Nombre" value="{{ usuario.nombre }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apellido1">Primer apellido</label>
+                            <input type="text" class="form-control" name="apellido1" placeholder="Primer apellido" value="{{ usuario.apellido1 }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apellido2">Segundo apellido</label>
+                            <input type="text" class="form-control" name="apellido2" placeholder="Segundo apellido" value="{{ usuario.apellido2 }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nombreUs">Nombre de usuario</label>
+                            <input type="text" class="form-control" name="nombreUs" placeholder="Nombre de usuario" value="{{ usuario.nombreUs }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fechaNac">Fecha de nacimiento</label>
+                            <input type="date" class="form-control" name="fechaNac" placeholder="Fecha de nacimiento" value="{{ usuario.fechaNac }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="correo">Correo electrónico</label>
+                            <input type="text" class="form-control" name="correo" placeholder="Correo electrónico" value="{{ usuario.correo }}" readonly>
+                        </div>
+
+                        <button type="submit" class="btn">Guardar</button>
+                    </form>
+                </div>
+                <div class="botones-contenedor">
+                    <button class="btn boton-eliminar-acc" onclick="window.location.href='http://127.0.0.1:5001/delete'">Eliminar cuenta</button>
+                    <button class="btn boton-volver" onclick="window.location.href='http://127.0.0.1:5000/main_page'">Volver a la página principal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

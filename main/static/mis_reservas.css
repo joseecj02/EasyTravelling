@@ -1,0 +1,131 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+  
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('img/fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.logo {
+    width: 50px; 
+    height: auto;
+}
+
+.navbar-brand img {
+    width: 50px; 
+    height: auto;
+}
+
+.contenedor-mr {
+    background-color: #3f0086;
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 0.8rem;
+    box-shadow: 1 0 1rem rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 1rem;
+    margin: 0 auto;
+    font-size: 20px;
+}
+
+.contenedor-filtro select {
+    padding: 0.3rem;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.4rem;
+    width: auto;
+    margin: 0 auto;
+}
+
+.contenedor-filtro {
+    background-color: #f0f0f0;
+    padding: 0.5rem;
+    border-radius: 0.8rem;
+    box-shadow: 1 0 1rem rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 1rem;
+    margin: 0 auto;
+    width: auto;
+}
+
+.p {
+    font-size: 26px;
+    background-color: #f0f0f0;
+    padding: 0.5rem;
+    border-radius: 0.8rem;
+}
+
+.reserva-pasada {
+    font-size: 14px;
+    margin-bottom: 1rem;
+}
+
+.soli-cancelar {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.reserva-pasada-bg {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.p.reserva-pasada {
+    background-color: #333333;
+}
+
+.card {
+    margin-bottom: 1.5rem;
+}
+
+.card-img {
+    border-radius: 0.8rem;
+}
+
+.fila-tres {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.boton-sol-cancelacion {
+    background-color: #ff0000;
+    color: white;
+    cursor: pointer;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 0.4rem;
+}
+
+.boton-sol-cancelacion:hover {
+    background-color: #ff3a3a;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+}
+
+.card-text.direccion {
+    font-size: 0.9rem;
+}
+
+.h2-class {
+    background-color: #f0f0f0;
+    border-radius: 0.4rem;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 1.2rem; /* Un poco más grande */
+}
+
+.text-center h1 {
+    margin: 0 auto;
+}

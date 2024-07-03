@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hotel
+  template:
+    metadata:
+      labels:
+        app: hotel
+    spec:
+      containers:
+      - name: hotel
+        image: hotel:latest
+        ports:
+        - containerPort: 5004
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongo:27017"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka:9092"

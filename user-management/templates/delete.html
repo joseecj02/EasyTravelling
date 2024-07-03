@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar cuenta</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='delete.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            background-image: url('/static/img/fondo.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .delete-acc-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .alerta-delete {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #ffcccc;
+            color: #cc0000;
+            border: 1px solid #cc0000;
+        }
+
+        .btn {
+            width: 100%;
+            color: white;
+        }
+
+        .btn-delete-acc {
+            background-color: #cc0000;
+        }
+
+        .btn-delete-acc:hover {
+            background-color: #ffa7a7;
+        }
+
+        .btn-volver-main {
+            background-color: #3f0086;
+        }
+
+        .btn-volver-main:hover {
+            background-color: #220049;
+            color:#fff;
+        }
+
+        a {
+            color: #3f0086;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="center-box">
+        <div class="delete-acc-box">
+            <h1>Introduzca la contraseña</h1>
+            {% if mensaje3 %}
+                <div class="alerta-delete" role="alert">
+                    {{ mensaje3 }}
+                </div>
+            {% endif %}
+            <form id="delete-form" method="post" action="{{ url_for('delete') }}">
+                <div class="form-group">
+                    <input type="password" class="form-control" name="password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn btn-delete-acc">Eliminar cuenta</button>
+            </form>
+        </div>
+        <button class="btn btn-volver-main" onclick="window.location.href='http://127.0.0.1:5000/main_page'">Volver a la página principal</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

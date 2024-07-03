@@ -1,0 +1,143 @@
+* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('img/fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.navbar-brand img {
+    width: 50px; 
+    height: auto;
+}
+
+.card {
+    background-color: #f0f0f0;
+    border: none;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.8rem;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.btn-primary {
+    background-color: #3f0086;
+    border-color: #3f0086;
+}
+
+.btn-primary:hover {
+    background-color: #220049;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.btn-light {
+    background-color: #f8f9fa;
+    border-color: #f8f9fa;
+}
+
+.btn-light:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+}
+
+.font-weight-bold.text-primary {
+    color: #3f0086 !important;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('img/fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.logo {
+    width: 50px; 
+    height: auto;
+}
+
+.card {
+    background-color: #f0f0f0;
+    border: none;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.8rem;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: white;
+}
+
+.btn-primary {
+    background-color: #3f0086;
+    border-color: #3f0086;
+}
+
+.btn-primary:hover {
+    background-color: #220049;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.btn-custom {
+    background-color: #3f0086 !important;
+    border-color: #3f0086 !important;
+    color: #ffffff;
+}
+
+.btn-custom:hover {
+    background-color: #220049 !important;
+    color: #ffffff;
+}
+
+.bg-custom {
+    background-color: #3f0086 !important;
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comentarios y valoraciones</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='comentarios_hotel.css') }}">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card-body {
+            background-color: #f0f0f0;
+        }
+
+        .alert-info {
+            color: #000;
+            background-color: #f0f0f0;
+            border-color: #f0f0f0;
+        }
+
+        .btn-custom {
+            background-color: #3f0086 !important;
+            border-color: #3f0086 !important;
+            color: #ffffff;
+        }
+
+        .btn-custom-valorar {
+            background-color: #3f0086 !important;
+            border-color: #3f0086 !important;
+            color: #ffffff;
+            position: relative;
+            left: 30%;
+        }
+
+        .btn-custom:hover {
+            background-color: #220049 !important;
+            color: #ffffff;
+        }
+        .btn-custom-valorar:hover {
+            background-color: #220049 !important;
+            color: #ffffff;
+        }
+
+        .btn-danger-custom {
+            background-color: crimson !important;
+            color: #fff !important;
+        }
+
+        .btn-danger-custom:hover {
+            background-color: #ff0000 !important;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            padding-top: 3.5rem;
+        }
+
+        .contenedor-comentarios {
+            background-color: #f0f0f0;
+            padding: 1.5rem;
+            border-radius: 0.8rem;
+            box-shadow: 1 0 1rem rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.2rem;
+            width: 100%;
+        }
+
+        .comentario {
+            text-align: left;
+        }
+
+        .contenedor-mensaje {
+            margin-top: 1rem;
+            background-color: #f0f0f0;
+            padding: 1.5rem;
+            border-radius: 0.8rem;
+            box-shadow: 1 0 1rem rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .nombre-usuario {
+            text-align: left;
+            flex: 1;
+        }
+
+        .fecha-publicacion {
+            text-align: center;
+            flex: 1;
+        }
+
+        .valoracion {
+            text-align: right;
+            flex: 1;
+        }
+
+        .comentario {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .btn-eliminar {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .bg-color{
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container contenedor-principal">
+        <p class="titulo bg-color p-3 rounded">{{nombre}}</p>
+        {% if id_usuario == 0 %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form action="/add_comentario_{{ nombre }}" method="POST">
+                        <div class="form-group">
+                            <textarea class="form-control" name="comentario" placeholder="Añade un comentario" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="valoracion">Valoración:</label>
+                            <select class="form-control" name="valoracion" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="id" value="{{ id }}">
+                        <input type="hidden" name="ubicacion" value="">
+                        <input type="hidden" name="filtro" value="">
+                        <input type="hidden" name="fecha_llegada" value="">
+                        <input type="hidden" name="fecha_salida" value="">
+                        <input type="hidden" name="hotel_buscado" value="">
+                        <button type="submit" class="btn btn-custom-valorar">Valorar</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+        {% if resultados %}
+            {% for resultado in resultados %}
+                <div class="card mb-3 contenedor-comentarios">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div class="nombre-usuario"><h5 class="card-title">{{resultado.nombreUs}}</h5></div>
+                            <div class="fecha-publicacion"><p class="card-text">{{resultado.fechaPubli}}</p></div>
+                            <div class="valoracion"><p class="card-text"><strong>Valoración:</strong> {{resultado.valoracion}}</p></div>
+                        </div>
+                        <p class="card-text comentario">{{resultado.comentario}}</p>
+                        {% if id_usuario == resultado.id_usuario %}
+                            <form action="/delete_comentario_{{ nombre }}_{{ resultado.id_usuario }}_{{ resultado.id_hotel }}" method="POST">
+                                <input type="hidden" name="id_usuario" value="{{ resultado.id_usuario }}">
+                                <input type="hidden" name="nombre" value="{{ nombre }}">
+                                <input type="hidden" name="id_hotel" value="{{ resultado.id_hotel }}">
+                                <input type="hidden" name="valoracion" value="{{ resultado.valoracion }}">
+                                <input type="hidden" name="ubicacion" value="">
+                                <input type="hidden" name="filtro" value="">
+                                <input type="hidden" name="fecha_llegada" value="">
+                                <input type="hidden" name="fecha_salida" value="">
+                                <input type="hidden" name="hotel_buscado" value="">
+                                <button type="submit" class="btn btn-danger-custom btn-eliminar">Eliminar comentario</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if mensaje %}
+            <div class="alert alert-info">
+                <p>{{mensaje}}</p>
+            </div>
+        {% endif %}
+        <div class="posicion-boton-volver">
+            {% if hotel_buscado == 'True' %}
+                <form action="/buscar_hotel" method="POST">
+                    <input type="hidden" name="ubicacion" value="">
+                    <input type="hidden" name="filtro" value="">
+                    <input type="hidden" name="fecha_llegada" value="">
+                    <input type="hidden" name="fecha_salida" value="">
+                    <button type="submit" class="btn btn-custom">Volver</button>
+                </form>
+            {% else %}
+                <button id="boton-main-page" class="btn btn-custom" onclick="window.location.href='http://127.0.0.1:5000/'">Volver a la página principal</button>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        function getParameterByName(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const filtroInputs = document.querySelectorAll('input[name="filtro"]');
+            const ubicacionInputs = document.querySelectorAll('input[name="ubicacion"]');
+            const hotel_buscadoInputs = document.querySelectorAll('input[name="hotel_buscado"]');
+            const fecha_llegadaInputs = document.querySelectorAll('input[name="fecha_llegada"]');
+            const fecha_salidaInputs = document.querySelectorAll('input[name="fecha_salida"]');
+            const filtroParam = getParameterByName('filtro');
+            const ubicacionParam = getParameterByName('ubicacion');
+            const hotel_buscadoParam = getParameterByName('hotel_buscado');
+            const fecha_llegadaParam = getParameterByName('fecha_llegada');
+            const fecha_salidaParam = getParameterByName('fecha_salida');
+
+            filtroInputs.forEach(input => {
+                if (filtroParam) {
+                    input.value = filtroParam;
+                } else {
+                    input.value = "{{ filtro }}";
+                }
+            });
+
+            ubicacionInputs.forEach(input => {
+                if (ubicacionParam) {
+                    input.value = ubicacionParam;
+                } else {
+                    input.value = "{{ ubicacion }}";
+                }
+            });
+
+            hotel_buscadoInputs.forEach(input => {
+                if(hotel_buscadoParam){
+                    input.value = hotel_buscadoParam;
+                } else {
+                    input.value = "{{ hotel_buscado }}";
+                }
+            });
+
+            fecha_llegadaInputs.forEach(input => {
+                if (fecha_llegadaParam){
+                    input.value = fecha_llegadaParam;
+                } else {
+                    input.value = "{{ fecha_llegada }}";
+                }
+            })
+
+            fecha_salidaInputs.forEach(input => {
+                if (fecha_salidaParam){
+                    input.value = fecha_salidaParam;
+                } else {
+                    input.value = "{{ fecha_salida }}";
+                }
+            })
+        });
+    </script>
+</body>
+</html>

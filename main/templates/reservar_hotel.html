@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar hotel</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='reservar_hotel.css') }}">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('img/fondo.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .contenedor-reserva {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            margin-bottom: 1rem; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #555555;
+            font-weight: bold;
+        }
+
+        .form-group input[readonly] {
+            background-color: #e9e9e9;
+        }
+
+        .btn-custom {
+            background-color: #3f0086;
+            color: #ffffff;
+        }
+
+        .btn-custom:hover {
+            background-color: #220049;
+            color: #ffffff;
+        }
+
+        .posicion-boton-volver {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid contenedor-principal">  
+        <div class="contenedor-reserva">
+            <form method="POST" action="/sesion_pago_hotel">
+                <div class="form-group">
+                    <label for="nombre">Nombre del hotel</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre_read" value="{{ nombre }} {{ estrellas }} estrellas" readonly required>
+                </div>
+                <div class="form-group">
+                    <label for="ubicacion">Ubicación</label>
+                    <input type="text" class="form-control" id="ubicacion" name="ubicacion_read" value="{{ ubicacion }}" readonly required>
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion" value="{{ direccion }}" readonly required>
+                </div>
+                <div class="form-group">
+                    <label for="fecha_llegada">Fecha de llegada</label>
+                    {% if fecha_llegada %}
+                        <input type="date" class="form-control" id="fecha_llegada" name="fecha_llegada" value="{{ fecha_llegada }}" readonly required>
+                    {% else %}
+                        <input type="date" class="form-control" id="fecha_llegada" name="fecha_llegada" required>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="fecha_salida">Fecha de salida</label>
+                    {% if fecha_salida %}
+                        <input type="date" class="form-control" id="fecha_salida" name="fecha_salida" value="{{ fecha_salida }}" readonly required>
+                    {% else %}
+                        <input type="date" class="form-control" id="fecha_salida" name="fecha_salida" required>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="precio">Precio</label>
+                    {% if precio %}
+                        <input type="text" class="form-control" id="precio" name="precio_read" value="{% if fecha_llegada and fecha_salida %}{{ precio }}€{% else %}0€{% endif %}" readonly required>
+                    {% endif %}
+                </div>
+                <input type="hidden" id="precio_diario" value="{{ precio }}">
+                <input type="hidden" name="tipo_reserva" value="{{ tipo_reserva }}">
+                <input type="hidden" name="id_hotel" value="{{ id_hotel }}">
+                <input type="hidden" name="fecha_llegada_hidden" id="fecha_llegada_hidden" value="{{ fecha_llegada }}">
+                <input type="hidden" name="fecha_salida_hidden" id="fecha_salida_hidden" value="{{ fecha_salida }}">
+                <input type="hidden" name="precio_hidden" id="precio_hidden" value="{{ precio }}">
+                <input type="hidden" name="ubicacion" value="{{ ubicacion }}">
+                <input type="hidden" name="filtro" value="{{ filtro }}">
+                <input type="hidden" name="precio" value="{{ precio }}">
+                <input type="hidden" name="nombre" value="{{ nombre }}">
+                <input type="hidden" name="estrellas" value="{{ estrellas }}">
+                <input type="hidden" name="direccion" value="{{ direccion }}">
+                <input type="hidden" name="estado" value="{{ estado }}">
+                <input type="hidden" name="hotel_buscado" value="{{ hotel_buscado }}">
+                <input type="hidden" name="imagen" value="{{ imagen }}">
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-custom">Confirmar Reserva</button>
+                </div>
+            </form>
+        </div>
+        <div class="posicion-boton-volver">
+            <input type="hidden" name="hotel_buscado" value="{{ hotel_buscado }}">
+            {% if hotel_buscado == "False" %}
+                <button id="boton-main-page" class="btn btn-custom" onclick="window.location.href='http://127.0.0.1:5000/'">Volver a la página principal</button>
+            {% else %}
+                <form method="POST" action="buscar_hotel">
+                    <input type="hidden" name="fecha_llegada" value="{{ fecha_llegada }}">
+                    <input type="hidden" name="fecha_salida" value="{{ fecha_salida }}">
+                    <input type="hidden" name="ubicacion" value="{{ ubicacion }}">
+                    <input type="hidden" name="filtro" value="{{ filtro }}">
+                    <button type="submit" class="btn btn-custom">Volver</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        const today = new Date().toISOString().split('T')[0];
+        const fechaLlegada = document.getElementById('fecha_llegada');
+        const fechaSalida = document.getElementById('fecha_salida');
+        const precioDiario = parseFloat(document.getElementById('precio_diario').value);
+        const precioTotal = document.getElementById('precio');
+
+        fechaLlegada.setAttribute('min', today);
+        fechaSalida.setAttribute('min', today);
+
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result.toISOString().split('T')[0];
+        }
+
+        function actualizarFechas() {
+            const llegadaValue = new Date(fechaLlegada.value);
+            const salidaValue = new Date(fechaSalida.value);
+
+            if (fechaLlegada.value) {
+                fechaSalida.setAttribute('min', addDays(fechaLlegada.value, 1));
+                if (salidaValue <= llegadaValue) {
+                    fechaSalida.value = addDays(fechaLlegada.value, 1);
+                }
+            }
+            if (fechaSalida.value) {
+                fechaLlegada.setAttribute('max', addDays(fechaSalida.value, -1));
+                if (llegadaValue >= salidaValue) {
+                    fechaLlegada.value = addDays(fechaSalida.value, -1);
+                }
+            }
+            if (fechaLlegada.value && fechaSalida.value) {
+                const diffTime = Math.abs(salidaValue - llegadaValue);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const total = diffDays * precioDiario;
+                precioTotal.value = total + '€';
+                document.getElementById('fecha_llegada_hidden').value = fechaLlegada.value;
+                document.getElementById('fecha_salida_hidden').value = fechaSalida.value;
+                document.getElementById('precio_hidden').value = total;
+            } else {
+                precioTotal.value = '0€';
+                document.getElementById('precio_hidden').value = '0';
+            }
+        }
+
+        fechaLlegada.addEventListener('change', actualizarFechas);
+        fechaSalida.addEventListener('change', actualizarFechas);
+    </script>
+</body>
+</html>

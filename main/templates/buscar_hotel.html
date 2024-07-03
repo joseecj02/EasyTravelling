@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de vuelos</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='buscar_vuelo.css') }}">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-custom{
+            background-color: #3f0086 !important;
+            border-color: #3f0086 !important;
+            color: #ffffff;
+        }
+
+        .btn-custom:hover{
+            background-color: #220049 !important;
+            color: #ffffff;
+        }
+
+        .bg-custom {
+            background-color: #3f0086 !important;
+        }
+
+        .navbar-collapse{
+            text-align: center;
+        }
+
+        .navbar-nav .dropdown-menu{
+            text-align: center;
+        }
+
+        .nav-link{
+            color:#ffffff !important;
+        }
+
+        .col-md-6{
+            flex: 0 0 45%;
+            max-width: 45%;
+        }
+
+        .alert-info {
+            background-color: #f0f0f0;
+            border-color: #f0f0f0;
+            color: #000;
+        }
+
+        .h5{
+            color: #3f0086;
+        }
+
+        .text-custom{
+            color: #3f0086
+        }
+
+        .card{
+            background-color: #f0f0f0;
+        }
+        .card-title{
+            color: #3f0086;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+        <a class="navbar-brand" href="http://127.0.0.1:5000/">
+            <img src="{{url_for('static', filename='img/EasyTravelling.png')}}" alt="EasyTravelling Logo" class="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_hotel">Hoteles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_vuelo">Vuelos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_bus">Autobuses</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if usuario %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        &#9776;
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="http://127.0.0.1:5000/mis_reservas">Mis reservas</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5001/edit_account">Editar perfil</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5001/go_change_password">Cambiar contraseña</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5002/logout">Cerrar sesión</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-light mr-2" href="http://127.0.0.1:5001/register">Registro</a>
+                    <a class="btn btn-light" href="http://127.0.0.1:5002/go_login">Iniciar sesión</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="card p-4">
+            <form action="/buscar_hotel" method="POST" class="form-row">
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="ubicacion" placeholder="Ubicación" value="{{ request.form.ubicacion }}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="date" class="form-control" id="fecha_llegada" name="fecha_llegada" placeholder="Fecha inicio" value="{{ request.form.fecha_llegada }}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="date" class="form-control" id="fecha_salida" name="fecha_salida" placeholder="Fecha final" value="{{ request.form.fecha_salida }}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <select class="form-control" name="filtro" required>
+                        <option value="precio_min" {% if request.form.filtro == 'precio_min' %}selected{% endif %}>Precio (menor a mayor)</option>
+                        <option value="precio_max" {% if request.form.filtro == 'precio_max' %}selected{% endif %}>Precio (mayor a menor)</option>
+                        <option value="estrellas_min" {% if request.form.filtro == 'estrellas_min' %}selected{% endif %}>Estrellas (menor a mayor)</option>
+                        <option value="estrellas_max" {% if request.form.filtro == 'estrellas_max' %}selected{% endif %}>Estrellas (mayor a menor)</option>
+                        <option value="valoracion_min" {% if request.form.filtro == 'valoracion_min' %}selected{% endif %}>Valoración (menor a mayor)</option>
+                        <option value="valoracion_max" {% if request.form.filtro == 'valoracion_max' %}selected{% endif %}>Valoración (mayor a menor)</option>
+                    </select>
+                </div>
+                <input type="hidden" name="hotel_buscado" value="True">  
+                <div class="form-group col-md-12 text-center">
+                    <button type="submit" class="btn btn-custom">Buscar</button>
+                </div>
+            </form>
+        </div>
+        {% if mensaje %}
+        <div class="alert alert-info mt-3 text-center">
+            <p>{{ mensaje }}</p>
+        </div>
+        {% endif %}
+        {% if resultados %}
+        <div class="mt-4">
+            {% for resultado in resultados %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="{{url_for('static', filename='img/' + resultado.imagen) }}" alt="Imagen hotel" class="img-fluid rounded">
+                        </div>
+                        <div class="col-md-8">
+                            <h5 class="card-title">{{ resultado.nombre }} {{ resultado.estrellas }} estrellas</h5>
+                            <p class="card-text">Dirección: {{ resultado.direccion }}</p>
+                            <p class="card-text">Teléfono: {{ resultado.telefono }}</p>
+                            <p class="card-text">Descripción: {{ resultado.descripcion }}</p>
+                            <p class="card-text">Valoración: {{ resultado.valoracion }} / 10</p>
+                            <p class="card-text font-weight-bold text-custom">Precio por noche: {{ resultado.precio }}€</p>
+                            <div class="d-flex justify-content-between">
+                                <form action="/comentarios_{{ resultado.nombre }}" method="POST">
+                                    <input type="hidden" name="id" value="{{ resultado.id }}">
+                                    <input type="hidden" name="nombre" value="{{ resultado.nombre }}">
+                                    <input type="hidden" name="ubicacion" value="{{ ubicacion }}">
+                                    <input type="hidden" name="filtro" value="{{ filtro }}">
+                                    <input type="hidden" name="fecha_llegada" value="{{ fecha_llegada }}">
+                                    <input type="hidden" name="fecha_salida" value="{{ fecha_salida }}">
+                                    <input type="hidden" name="hotel_buscado" value="{{ hotel_buscado }}">
+                                    <button type="submit" class="btn btn-custom">Ver comentarios</button>
+                                </form>
+                                <form action="/reservar_hotel" method="POST">
+                                    <input type="hidden" name="id" value="{{ resultado.id }}">
+                                    <input type="hidden" name="fecha_llegada" value="{{ fecha_llegada }}">
+                                    <input type="hidden" name="fecha_salida" value="{{ fecha_salida }}">
+                                    <input type="hidden" name="ubicacion" value="{{ resultado.ubicacion }}">
+                                    <input type="hidden" name="filtro" value="{{ filtro }}">
+                                    <input type="hidden" name="precio" value="{{ resultado.precio }}">
+                                    <input type="hidden" name="nombre" value="{{ resultado.nombre }}">
+                                    <input type="hidden" name="estrellas" value="{{ resultado.estrellas }}">
+                                    <input type="hidden" name="direccion" value="{{ resultado.direccion }}">
+                                    <input type="hidden" name="imagen" value="{{ resultado.imagen }}">
+                                    <button type="submit" class="btn btn-custom">Reservar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fecha_llegada').setAttribute('min', today);
+        document.getElementById('fecha_salida').setAttribute('min', today);
+
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result.toISOString().split('T')[0];
+        }
+
+        function actualizarFechas() {
+            const fechaLlegada = document.getElementById('fecha_llegada').value;
+            const fechaSalida = document.getElementById('fecha_salida').value;
+
+            if (fechaLlegada) {
+                document.getElementById('fecha_salida').setAttribute('min', addDays(fechaLlegada, 1));
+                if (new Date(fechaSalida) <= new Date(fechaLlegada)) {
+                    document.getElementById('fecha_salida').value = addDays(fechaLlegada, 1);
+                }
+            }
+            if (fechaSalida) {
+                document.getElementById('fecha_llegada').setAttribute('max', addDays(fechaSalida, -1));
+                if (new Date(fechaLlegada) >= new Date(fechaSalida)) {
+                    document.getElementById('fecha_llegada').value = addDays(fechaSalida, -1);
+                }
+            }
+        }
+
+        document.getElementById('fecha_llegada').addEventListener('change', actualizarFechas);
+        document.getElementById('fecha_salida').addEventListener('change', actualizarFechas);
+    </script>
+</body>
+</html>

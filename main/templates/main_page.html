@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Página principal</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='main_page.css')}}">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .btn-custom{
+            background-color: #3f0086 !important;
+            border-color: #3f0086 !important;
+            color: #ffffff;
+        }
+
+        .btn-custom:hover{
+            background-color: #220049 !important;
+            color: #ffffff;
+        }
+
+        .bg-custom {
+            background-color: #3f0086 !important;
+        }
+
+        .bg-color{
+            background-color: #f0f0f0;
+        }
+
+        .navbar-toggler::after {
+            content: "\2261"; 
+            font-size: 1.5rem; 
+            color: white; 
+        }
+
+        .precio{
+            font-weight: bold;
+            color:#3f0086;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+        <a class="navbar-brand" href="http://127.0.0.1:5000/">
+            <img src="{{url_for('static', filename='img/EasyTravelling.png')}}" alt="EasyTravelling Logo" class="logo">
+        </a>
+        <ul class="navbar-nav ml-auto">
+            {% if usuario %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    &#9776;
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="http://127.0.0.1:5000/mis_reservas">Mis reservas</a>
+                    <a class="dropdown-item" href="http://127.0.0.1:5001/edit_account">Editar perfil</a>
+                    <a class="dropdown-item" href="http://127.0.0.1:5001/go_change_password">Cambiar contraseña</a>
+                    <a class="dropdown-item" href="http://127.0.0.1:5002/logout">Cerrar sesión</a>
+                </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="btn btn-light mr-2" href="http://127.0.0.1:5001/register">Registro</a>
+                <a class="btn btn-light" href="http://127.0.0.1:5002/go_login">Iniciar sesión</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="container mt-3">
+        <div class="d-flex justify-content-center mb-3">
+            <a class="btn btn-custom mr-2" href="http://127.0.0.1:5000/buscar_hotel">Hoteles</a>
+            <a class="btn btn-custom mr-2" href="http://127.0.0.1:5000/buscar_vuelo">Vuelos</a>
+            <a class="btn btn-custom" href="http://127.0.0.1:5000/buscar_bus">Autobuses</a>
+        </div>
+        <div class="contenedor-principal">
+            <div class="contenedor-mv p-3 mb-3 bg-color rounded shadow-sm text-center">
+                <p>¡Estos son los hoteles mejor valorados!</p>
+            </div>
+            {% if resultados %}
+            {% for resultado in resultados %}
+            <div class="contenedor-resultados p-3 mb-3 bg-color rounded shadow-sm">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12">
+                        <img src="{{url_for('static', filename='img/' + resultado.imagen )}}" alt="Imagen hotel" class="img-fluid rounded">
+                    </div>
+                    <div class="col-md-8 col-sm-12">
+                        <h5 class="nombre-estrellas">{{ resultado.nombre }} {{ resultado.estrellas}} estrellas</h5>
+                        <p class="direccion">Dirección: {{ resultado.direccion}}</p>
+                        <p class="telefono">Teléfono: {{ resultado.telefono}}</p>
+                        <p class="descripcion">Descripción: {{ resultado.descripcion }}</p>
+                        <p class="valoracion">Valoración: {{ resultado.valoracion }} / 10</p>
+                        <p class="precio">Precio por noche: {{ resultado.precio }}€</p>
+                        <div class="d-flex justify-content-between">
+                            <form action="/comentarios_{{ resultado.nombre }}" method="POST" class="mr-2">
+                                <input type="hidden" name="id" value="{{ resultado.id }}">
+                                <input type="hidden" name="nombre" value="{{ resultado.nombre }}">
+                                <input type="hidden" name="ubicacion" value="{{ ubicacion }}">
+                                <input type="hidden" name="filtro" value="{{ filtro }}">
+                                <input type="hidden" name="hotel_buscado" value="{{ hotel_buscado }}">
+                                <button type="submit" class="btn btn-custom">Ver comentarios</button>
+                            </form>
+                            <form action="/reservar_hotel" method="POST">
+                                <input type="hidden" name="id" value="{{ resultado.id }}">
+                                <input type="hidden" name="fecha_llegada" value="{{ fecha_llegada }}">
+                                <input type="hidden" name="fecha_salida" value="{{ fecha_salida }}">
+                                <input type="hidden" name="ubicacion" value="{{ resultado.ubicacion }}">
+                                <input type="hidden" name="filtro" value="{{ filtro }}">
+                                <input type="hidden" name="precio" value="{{ resultado.precio }}">
+                                <input type="hidden" name="nombre" value="{{ resultado.nombre }}">
+                                <input type="hidden" name="estrellas" value="{{ resultado.estrellas }}">
+                                <input type="hidden" name="direccion" value="{{ resultado.direccion }}">
+                                <input type="hidden" name="imagen" value="{{ resultado.imagen }}">
+                                <input type="hidden" name="estado" value="Reservado">
+                                <input type="hidden" name="tipo_reserva" value="Hotel">
+                                <input type="hidden" name="hotel_buscado" value="{{ hotel_buscado }}">
+                                <button type="submit" class="btn btn-custom">Reservar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

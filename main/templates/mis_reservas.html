@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis reservas</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='mis_reservas.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .btn-custom {
+            background-color: #3f0086 !important;
+            border-color: #3f0086 !important;
+            color: #ffffff;
+        }
+
+        .btn-custom:hover {
+            background-color: #220049 !important;
+            color: #ffffff;
+        }
+
+        .bg-custom {
+            background-color: #3f0086 !important;
+        }
+
+        .navbar-collapse {
+            text-align: center;
+        }
+
+        .navbar-nav .dropdown-menu {
+            text-align: center;
+        }
+
+        .nav-link {
+            color: #ffffff !important;
+        }
+
+        .col-md-6 {
+            flex: 0 0 45%;
+            max-width: 45%;
+        }
+
+        .alert-info {
+            background-color: #fff;
+            border-color: #fff;
+            color: #000;
+        }
+
+        .contenedor-mr {
+            background-color: #3f0086;
+            color: #fff;
+            padding: 0.5rem;
+            border-radius: 0.8rem;
+            box-shadow: 1 0 1rem rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 20px;
+        }
+
+        .contenedor-filtro select {
+            padding: 0.3rem;
+            border: 0.1rem solid #ccc;
+            border-radius: 0.4rem;
+            margin: 0 auto;
+        }
+
+        .contenedor-filtro {
+            background-color: #f0f0f0;
+            padding: 0.5rem;
+            border-radius: 0.8rem;
+            box-shadow: 1 0 1rem rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 1rem;
+            margin: 0 auto;
+        }
+
+        .p {
+            font-size: 26px;
+            background-color: #f0f0f0;
+            padding: 0.5rem;
+            border-radius: 0.8rem;
+        }
+
+        .reserva-pasada {
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
+
+        .soli-cancelar {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .reserva-pasada-bg {
+            background-color: #333333 !important;
+            color: #ffffff;
+        }
+
+        .p .reserva-pasada {
+            background-color: #333333 !important;
+        }
+
+        .card {
+            margin-bottom: 1.5rem;
+        }
+
+        .card-img {
+            border-radius: 0.8rem;
+        }
+
+        .fila-tres {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .boton-sol-cancelacion {
+            background-color: #ff0000;
+            color: white;
+            cursor: pointer;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.4rem;
+        }
+
+        .boton-sol-cancelacion:hover {
+            background-color: #ff3a3a;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 1rem;
+        }
+
+        .card-text.direccion {
+            font-size: 0.9rem;
+        }
+
+        .h2-class {
+            background-color: #f0f0f0;
+            border-radius: 0.4rem;
+            text-align: center;
+            margin: 0 auto;
+            font-size: 2rem; 
+        }
+
+        .text-center h1 {
+            margin: 0 auto;
+        }
+
+        .card{
+            background-color: #f0f0f0;
+        }
+
+        .mb-3{
+            border-radius: 0.8rem;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fechaActual = new Date().toISOString().split('T')[0];
+
+            document.querySelectorAll('.fila-tres').forEach(function (element) {
+                const contenedor = element.closest('.card');
+                const fechaLlegadaElement = contenedor.querySelector('.fecha-llegada');
+                const fechaElement = contenedor.querySelector('.fecha');
+
+                const fechaLlegada = fechaLlegadaElement ? fechaLlegadaElement.textContent.split(': ')[1] : null;
+                const fecha = fechaElement ? fechaElement.textContent.split(': ')[1] : null;
+
+                if ((fechaLlegada && fechaLlegada < fechaActual) || (fecha && fecha < fechaActual)) {
+                    element.innerHTML = '<p class="reserva-pasada">La reserva no se puede cancelar</p>';
+                    contenedor.classList.add('reserva-pasada-bg');
+                }
+            });
+
+            document.getElementById('filtro').addEventListener('change', function () {
+                const filtro = this.value;
+                document.querySelectorAll('.card, .h2-class').forEach(function (element) {
+                    if (filtro === 'todos' || element.classList.contains(filtro)) {
+                        element.style.display = '';
+                    } else {
+                        element.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+        <a class="navbar-brand" href="http://127.0.0.1:5000/">
+            <img src="{{url_for('static', filename='img/EasyTravelling.png')}}" alt="EasyTravelling Logo" class="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_hotel">Hoteles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_vuelo">Vuelos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_bus">Autobuses</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if usuario %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        &#9776;
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="http://127.0.0.1:5000/mis_reservas">Mis reservas</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5001/edit_account">Editar perfil</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5001/go_change_password">Cambiar contraseña</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5002/logout">Cerrar sesión</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-light mr-2" href="http://127.0.0.1:5001/register">Registro</a>
+                    <a class="btn btn-light" href="http://127.0.0.1:5002/go_login">Iniciar sesión</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container my-5">
+        <div class="contenedor-mr text-center mb-4">
+            <h1>Reservas de: {{ nombreUs }}</h1>
+        </div>
+        <div class="contenedor-filtro form-group text-center">
+            <label for="filtro">Filtrar por:</label>
+            <select id="filtro" class="form-control d-inline-block">
+                <option value="todos">Todos</option>
+                <option value="hotel">Hoteles</option>
+                <option value="vuelo">Vuelos</option>
+                <option value="bus">Autobuses</option>
+            </select>
+        </div>
+        {% if mensaje %}
+            <div class="alert alert-info" role="alert">
+                <p>{{mensaje}}</p>
+            </div>
+        {% endif %}
+
+        {% set hoteles = resultados | selectattr('tipo_reserva', 'equalto', 'Hotel') | list %}
+        {% set vuelos = resultados | selectattr('tipo_reserva', 'equalto', 'Vuelo') | list %}
+        {% set buses = resultados | selectattr('tipo_reserva', 'equalto', 'Bus') | list %}
+        
+        {% if hoteles %}
+            <div class="hotel">
+                <h2 class="my-4 h2-class hotel">Reservas de hoteles</h2>
+                {% for resultado in hoteles %}
+                    <div class="card mb-3 hotel">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="{{url_for('static', filename='img/' + resultado.imagen )}}" class="card-img" alt="Imagen hotel">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Nombre hotel: {{ resultado.nombre }}</h5>
+                                    <p class="card-text direccion">Dirección: {{ resultado.direccion }}</p>
+                                    <p class="card-text fecha-llegada">Fecha de llegada: {{ resultado.fecha_llegada }}</p>
+                                    <p class="card-text">Fecha de salida: {{ resultado.fecha_salida }}</p>
+                                    <p class="card-text">Precio total: {{ resultado.precio }}€</p>
+                                    <div class="fila-tres">                               
+                                        {% if resultado.estado == "Reservado" %}
+                                            <form method="POST" action="/mis_reservas">
+                                                <input type="hidden" name="tipo_reserva" value="{{ resultado.tipo_reserva }}">
+                                                <input type="hidden" name="id_reserva" value="{{ resultado.id }}">
+                                                <input type="hidden" name="estado" value="Cancelacion solicitada">
+                                                <button type="submit" class="btn btn-danger">Solicitar cancelación</button>
+                                            </form>
+                                        {% elif resultado.estado == "Cancelacion solicitada" %}
+                                            <p class="soli-cancelar">Cancelación solicitada</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% if vuelos %}
+            <div class="vuelo">
+                <h2 class="my-4 h2-class vuelo">Reservas de vuelos</h2>
+                {% for resultado in vuelos %}
+                    <div class="card mb-3 vuelo">
+                        <div class="card-body">
+                            <h5 class="card-title">Nombre empresa: {{ resultado.nombre_empresa }}</h5>
+                            <p class="card-text">Ruta: {{ resultado.origen }}-{{ resultado.destino }}</p>
+                            <p class="card-text fecha">Fecha: {{ resultado.fecha }}</p>
+                            <p class="card-text">Hora de salida: {{ resultado.hora_salida }}</p>
+                            <p class="card-text">Hora de llegada: {{ resultado.hora_llegada }}</p>
+                            <p class="card-text">Precio: {{ resultado.precio }}€</p>
+                            <div class="fila-tres">
+                                {% if resultado.estado == "Reservado" %}
+                                    <form method="POST" action="/mis_reservas">
+                                        <input type="hidden" name="tipo_reserva" value="{{ resultado.tipo_reserva }}">
+                                        <input type="hidden" name="id_reserva" value="{{ resultado.id }}">
+                                        <input type="hidden" name="estado" value="Cancelacion solicitada">
+                                        <button type="submit" class="btn btn-danger">Solicitar cancelación</button>
+                                    </form>
+                                {% elif resultado.estado == "Cancelacion solicitada" %}
+                                    <p class="soli-cancelar">Cancelación solicitada</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% if buses %}
+            <div class="bus">
+                <h2 class="my-4 h2-class bus">Reservas de autobuses</h2>
+                {% for resultado in buses %}
+                    <div class="card mb-3 bus">
+                        <div class="card-body">
+                            <h5 class="card-title">Nombre empresa: {{ resultado.nombre_empresa }}</h5>
+                            <p class="card-text">Ruta: {{ resultado.origen }}-{{ resultado.destino }}</p>
+                            <p class="card-text fecha">Fecha: {{ resultado.fecha }}</p>
+                            <p class="card-text">Hora de salida: {{ resultado.hora_salida }}</p>
+                            <p class="card-text">Hora de llegada: {{ resultado.hora_llegada }}</p>
+                            <p class="card-text">Precio: {{ resultado.precio }}€</p>
+                            <div class="fila-tres">
+                                {% if resultado.estado == "Reservado" %}
+                                    <form method="POST" action="/mis_reservas">
+                                        <input type="hidden" name="tipo_reserva" value="{{ resultado.tipo_reserva }}">
+                                        <input type="hidden" name="id_reserva" value="{{ resultado.id }}">
+                                        <input type="hidden" name="estado" value="Cancelacion solicitada">
+                                        <button type="submit" class="btn btn-danger">Solicitar cancelación</button>
+                                    </form>
+                                {% elif resultado.estado == "Cancelacion solicitada" %}
+                                    <p class="soli-cancelar">Cancelación solicitada</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

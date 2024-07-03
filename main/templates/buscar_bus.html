@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de bus</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='buscar_bus.css') }}">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-custom{
+            background-color: #3f0086 !important;
+            border-color: #3f0086 !important;
+            color: #ffffff;
+        }
+
+        .btn-custom:hover{
+            background-color: #220049 !important;
+            color: #ffffff;
+        }
+
+        .bg-custom {
+            background-color: #3f0086 !important;
+        }
+
+        .navbar-collapse{
+            text-align: center;
+        }
+
+        .navbar-nav .dropdown-menu{
+            text-align: center;
+        }
+
+        .nav-link{
+            color:#ffffff !important;
+        }
+
+        .col-md-6{
+            flex: 0 0 45%;
+            max-width: 45%;
+        }
+
+        .alert-info {
+            background-color: #f0f0f0;
+            border-color: #f0f0f0;
+            color: #000;
+        }
+        .card{
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+        <a class="navbar-brand" href="http://127.0.0.1:5000/">
+            <img src="{{url_for('static', filename='img/EasyTravelling.png')}}" alt="EasyTravelling Logo" class="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_hotel">Hoteles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_vuelo">Vuelos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5000/buscar_bus">Autobuses</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if usuario %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        &#9776;
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="http://127.0.0.1:5000/mis_reservas">Mis reservas</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5001/edit_account">Editar perfil</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5001/go_change_password">Cambiar contraseña</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5002/logout">Cerrar sesión</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-light mr-2" href="http://127.0.0.1:5001/register">Registro</a>
+                    <a class="btn btn-light" href="http://127.0.0.1:5002/go_login">Iniciar sesión</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="card p-4">
+            <form action="/buscar_bus" method="POST" class="form-row">
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="origen" placeholder="Origen" value="{{ request.form.origen }}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control" name="destino" placeholder="Destino" value="{{ request.form.destino }}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <input type="date" class="form-control" id="fecha" name="fecha" value="{{ request.form.fecha }}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <select class="form-control" name="filtro" required>
+                        <option value="precio_min" {% if request.form.filtro == 'precio_min' %}selected{% endif %}>Precio (menor a mayor)</option>
+                        <option value="precio_max" {% if request.form.filtro == 'precio_max' %}selected{% endif %}>Precio (mayor a menor)</option>
+                        <option value="hora_salida_temp" {% if request.form.filtro == 'hora_salida_temp' %}selected{% endif %}>Hora de salida (temprano a tarde)</option>
+                        <option value="hora_salida_tarde" {% if request.form.filtro == 'hora_salida_tarde' %}selected{% endif %}>Hora de salida (tarde a temprano)</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-12 text-center">
+                    <button type="submit" class="btn btn-custom">Buscar</button>
+                </div>
+            </form>
+        </div>
+        {% if mensaje %}
+        <div class="alert alert-info mt-3 text-center">
+            <p>{{ mensaje }}</p>
+        </div>
+        {% endif %}
+        {% if resultados %}
+        <div class="mt-4">
+            {% for resultado in resultados %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title">{{ resultado.ubi_origen }} - {{ resultado.ubi_destino }}</h5>
+                            <p class="card-text">Compañía: {{ resultado.nombre_empresa }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="card-text">Fecha: {{ resultado.fecha }}</p>
+                            <p class="card-text">Hora salida: {{ resultado.hora_salida }}</p>
+                            <p class="card-text">Hora llegada: {{ resultado.hora_llegada }}</p>
+                            <p class="card-text">Precio: {{ resultado.precio }}€</p>
+                            <form action="/reservar_bus" method="POST">
+                                <input type="hidden" name="id" value="{{ resultado.id }}">
+                                <input type="hidden" name="precio" value="{{ resultado.precio }}">
+                                <input type="hidden" name="nombre_empresa" value="{{ resultado.nombre_empresa }}">
+                                <input type="hidden" name="destino" value="{{ resultado.ubi_destino }}">
+                                <input type="hidden" name="origen" value="{{ resultado.ubi_origen }}">
+                                <input type="hidden" name="fecha" value="{{ resultado.fecha }}">
+                                <input type="hidden" name="hora_salida" value="{{ resultado.hora_salida }}">
+                                <input type="hidden" name="hora_llegada" value="{{ resultado.hora_llegada }}">
+                                <input type="hidden" name="filtro" value="{{ request.form.filtro }}">
+                                <button type="submit" class="btn btn-custom">Reservar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fecha').setAttribute('min', today);
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error reserva</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='confirmacion_vuelo.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('/static/img/fondo.png') !important;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .contenedor {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            background-color: #3f0086;
+            color: #ffffff;
+            padding: 1rem;
+            text-decoration: none;
+            border-radius: 0.4rem;
+            transition: background-color 0.3s ease;
+            border: none;
+            margin: 10px auto;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #220049;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="contenedor">
+                    <h1>¡Ha habido un error con la reserva de tu vuelo!</h1>
+                    <form action="/buscar_vuelo" method="POST">
+                        <input type="hidden" name="origen" value="{{ origen }}">
+                        <input type="hidden" name="filtro" value="{{ filtro }}">
+                        <input type="hidden" name="destino" value="{{ destino }}">
+                        <input type="hidden" name="fecha" value="{{ fecha }}">
+                        <button type="submit" class="btn">Volver</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

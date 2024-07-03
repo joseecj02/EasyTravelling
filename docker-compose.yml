@@ -1,0 +1,160 @@
+version: '3'
+
+services:
+
+  bus-web:
+    build: ./bus
+    ports:
+      - "5003:5003"
+    depends_on:
+      - mongo
+      - kafka
+      - redis
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - kafka-net 
+
+  flight-web:
+    build: ./flight
+    ports:
+      - "5004:5004"
+    depends_on:
+      - mongo
+      - kafka
+      - redis
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - kafka-net 
+  
+  hotel-web:
+    build: ./hotel
+    ports:
+      - "5005:5005"
+    depends_on:
+      - mongo
+      - kafka
+      - redis
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - kafka-net
+  
+  reserves-payment-web:
+    build: ./reserves-payment
+    ports:
+      - "5006:5006"
+    depends_on:
+      - mongo
+      - kafka
+      - redis
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - kafka-net
+
+  login-web:
+    build: ./login
+    ports:
+      - "5002:5002"
+    depends_on:
+      - db
+      - kafka
+      - redis
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - kafka-net
+
+  user-management-web:
+    build: ./user-management
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db
+      - kafka
+      - redis
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - kafka-net
+
+  main-web:
+    build: ./main
+    ports:
+      - "5000:5000"
+    depends_on:
+      - login-web
+      - user-management-web
+      - redis
+    environment:
+      LOGIN_SERVICE_URL: http://login-web:5002
+      USER_MANAGEMENT_SERVICE_URL: http://user-management-web:5001
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - kafka-net
+  
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: 'tfg_viajes'
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - "3306:3306"
+    networks:
+      - kafka-net
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - kafka-net
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - kafka-net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - kafka-net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - kafka-net
+
+networks:
+  kafka-net:
+    driver: bridge
